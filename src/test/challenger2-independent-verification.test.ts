@@ -331,18 +331,18 @@ describe("Challenger 2 — Adversarial Verification of Systems Architectural Inv
       expect(profile.status).toBe("VERIFIED_VECTOR");
       expect(profile.renderer).toBe("CALIBRATED_VECTOR");
       expect(profile.profile).toBeDefined();
-      expect(profile.profile!.cameraElements.length).toBeGreaterThan(0);
+      expect(profile.profile?.cameraElements?.length).toBeGreaterThan(0);
     });
 
     it("retains GENERIC_FALLBACK and LEGACY_HEURISTIC for synthetic unmapped stub", () => {
-      const syntheticDevice: SmartphoneDevice = {
+      const syntheticDevice = {
         id: "device-without-visual-profile",
         name: "Mock Synthetic Phone",
         brand: "MockBrand",
         slug: "mock-synthetic-phone",
         releaseDate: "2025-01-01",
         launchMsrpUsd: 499,
-        category: "midrange",
+        category: "Value Disruptor" as const,
         dimensionsMm: { length: 160, width: 75, thickness: 8 },
         weightGrams: 180,
         display: {
@@ -365,7 +365,7 @@ describe("Challenger 2 — Adversarial Verification of Systems Architectural Inv
         performanceScore: 80,
         cameraScore: 80,
         batteryScore: 80,
-      };
+      } as unknown as SmartphoneDevice;
 
       const resolved = resolveDeviceVisualProfile(syntheticDevice);
       expect(resolved.status).toBe("GENERIC_FALLBACK");
@@ -375,14 +375,14 @@ describe("Challenger 2 — Adversarial Verification of Systems Architectural Inv
 
     it("stress-tests calculateChassisDimensions across edge cases and malformed specs", () => {
       // 1. Missing resolution or unparseable
-      const brokenDevice: SmartphoneDevice = {
+      const brokenDevice = {
         id: "test-broken",
         name: "Broken",
         brand: "Test",
         slug: "test-broken",
         releaseDate: "2025-01-01",
         launchMsrpUsd: 100,
-        category: "budget",
+        category: "Value Disruptor" as const,
         dimensionsMm: { length: 0, width: 0, thickness: 0 },
         weightGrams: 100,
         display: {
@@ -405,7 +405,7 @@ describe("Challenger 2 — Adversarial Verification of Systems Architectural Inv
         performanceScore: 50,
         cameraScore: 50,
         batteryScore: 50,
-      };
+      } as unknown as SmartphoneDevice;
 
       const dims = calculateChassisDimensions(brokenDevice);
       expect(dims.heightMm).toBeGreaterThanOrEqual(120);

@@ -1,5 +1,9 @@
 import { EvidenceChunkData, SmartphoneDevice } from "@/lib/seed-data";
-import { getDeviceLabTelemetry } from "@/lib/lab-measurements";
+import {
+  formatHoursDuration,
+  formatLoudnessClass,
+  getDeviceLabTelemetry,
+} from "@/lib/lab-measurements";
 import { stripEmDashes } from "@/lib/editors";
 
 /**
@@ -102,6 +106,14 @@ export function synthesizeDeviceEvidence(device: SmartphoneDevice): EvidenceChun
   };
 
   // 3. Standardized Battery Endurance, Energy Density & Charging Curve Record
+  const batteryEnergyWh = Number(
+    (lab.battery.powerMetrics.energyTotalMwh / 1000).toFixed(1)
+  );
+  const activeUseHoursFormatted = formatHoursDuration(
+    lab.battery.activeUseScoreHours
+  );
+  const speakerClass = formatLoudnessClass(lab.acoustics.loudnessClass);
+
   const batterySentiment: EvidenceChunkData["sentiment"] =
     s.batteryCapacityMah >= 5200 || s.fullChargeMins <= 40
       ? "POSITIVE"
@@ -113,14 +125,14 @@ export function synthesizeDeviceEvidence(device: SmartphoneDevice): EvidenceChun
     id: `ev-${device.id}-battery`,
     sourceType: "LAB_BENCHMARK",
     sourceTitle: stripEmDashes(
-      `${s.batteryCapacityMah}mAh (${lab.batteryEnergyWh}Wh) Active Runtime & ${s.wiredChargingW}W Charge Curve`
+      `${s.batteryCapacityMah}mAh (${batteryEnergyWh}Wh) Active Runtime & ${s.wiredChargingW}W Charge Curve`
     ),
     sourceAuthor: "PhoneIndex OpenLab™ Power & Acoustic Bench",
     sourceUrl: `https://www.gsmarena.com/results.php3?sQuickSearch=yes&sName=${encodeURIComponent(
       `${device.brand} ${device.name}`
     )}`,
     excerpt: stripEmDashes(
-      `Standardized 300-nit OpenLab™ endurance reaches ${lab.activeUseHoursFormatted} (${lab.webBrowsingHours}h web, ${lab.videoPlaybackHours}h video, ${lab.gaming3dHours}h 3D gaming) from its ${s.batteryCapacityMah}mAh ${s.batteryChemistry} cell (${lab.batteryEnergyWh}Wh). ${s.wiredChargingW}W wired charging completes 0-100% in ${s.fullChargeMins} mins; stereo speakers measure ${lab.speakerLoudnessLufs} LUFS (${lab.speakerClass}).`
+      `Standardized 300-nit OpenLab™ endurance reaches ${activeUseHoursFormatted} (${lab.battery.webBrowsingHours}h web, ${lab.battery.videoPlaybackHours}h video, ${lab.battery.gaming3dHours}h 3D gaming) from its ${s.batteryCapacityMah}mAh ${s.batteryChemistry} cell (${batteryEnergyWh}Wh). ${s.wiredChargingW}W wired charging completes 0-100% in ${s.fullChargeMins} mins; stereo speakers measure ${lab.acoustics.lufs} LUFS (${speakerClass}).`
     ),
     topic: "BATTERY",
     sentiment: batterySentiment,

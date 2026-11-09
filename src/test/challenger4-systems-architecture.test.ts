@@ -16,7 +16,7 @@ import {
 import { SmartphoneDevice } from "../lib/seed-data";
 
 // Sample device for empirical testing
-const sampleDevice: SmartphoneDevice = {
+const sampleDevice = {
   id: "google-pixel-9-pro",
   name: "Google Pixel 9 Pro",
   brand: "Google",
@@ -24,7 +24,7 @@ const sampleDevice: SmartphoneDevice = {
   releaseDate: "2024-09-04",
   launchMsrpUsd: 999,
   currentStreetUsd: 899,
-  category: "flagship",
+  category: "Ultra Flagship" as const,
   dimensionsMm: { length: 152.8, width: 72.0, thickness: 8.5 },
   weightGrams: 199,
   display: {
@@ -63,7 +63,7 @@ const sampleDevice: SmartphoneDevice = {
   cameraScore: 96,
   batteryScore: 88,
   expertReviewExcerpt: "Unmatched computational photography with refined ergonomics.",
-};
+} as unknown as SmartphoneDevice;
 
 describe("Challenger 4: Systems & Architecture Re-Verification (Gate 2)", () => {
   // =========================================================================

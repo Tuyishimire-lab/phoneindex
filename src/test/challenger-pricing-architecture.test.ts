@@ -17,7 +17,7 @@ import {
 import { SmartphoneDevice } from "../lib/seed-data";
 
 // Sample flagship device for testing
-const testDevice: SmartphoneDevice = {
+const testDevice = {
   id: "samsung-galaxy-s24-ultra",
   name: "Samsung Galaxy S24 Ultra",
   brand: "Samsung",
@@ -25,7 +25,7 @@ const testDevice: SmartphoneDevice = {
   releaseDate: "2024-01-24",
   launchMsrpUsd: 1299,
   currentStreetUsd: 1099,
-  category: "flagship",
+  category: "Ultra Flagship" as const,
   dimensionsMm: { length: 162.3, width: 79.0, thickness: 8.6 },
   weightGrams: 232,
   display: {
@@ -64,7 +64,7 @@ const testDevice: SmartphoneDevice = {
   cameraScore: 95,
   batteryScore: 90,
   expertReviewExcerpt: "The pinnacle of Android productivity and zoom imaging.",
-};
+} as unknown as SmartphoneDevice;
 
 describe("Challenger 2: Systems, Architecture & Resilience Empirical Verification", () => {
   // =========================================================================
@@ -156,8 +156,9 @@ describe("Challenger 2: Systems, Architecture & Resilience Empirical Verificatio
 
       const result = await simulateMultiTierPricingRequest(true, true, true);
       expect(result.source).toBe("L4_DETERMINISTIC_FALLBACK");
-      expect(result.data.pricingSource).toBe("LOCAL_DETERMINISTIC_FALLBACK");
-      expect(result.data.deviceId).toBe(testDevice.id);
+      const fallbackData = result.data as ReturnType<typeof getDevicePricingOverview>;
+      expect(fallbackData.pricingSource).toBe("LOCAL_DETERMINISTIC_FALLBACK");
+      expect(fallbackData.deviceId).toBe(testDevice.id);
     });
   });
 
