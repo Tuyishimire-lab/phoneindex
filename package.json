@@ -1,0 +1,38 @@
+{
+  "name": "phone-index",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "catalog:build": "python scripts/catalog_etl/build_massive_catalog.py",
+    "visual:audit": "vitest run --config vitest.visual.config.mts",
+    "score:audit": "vitest run --config vitest.score.config.mts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "predev": "node scripts/build-css.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/build-css.mjs",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "lucide-react": "^1.53.0",
+    "next": "16.4.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.3",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^5.0.5"
+  }
+}
